@@ -9,6 +9,7 @@ function onClickCreateTask() {
   const dataTask = objDataCreate(task);
   addToLocalStorage(KEY_LOCAL_STORAGE, dataTask);
   toDoInputRef.value = "";
+  addNewTask(dataTask);
 }
 
 function objDataCreate(text, statusbar = false) {
@@ -40,3 +41,7 @@ function addMarkup(text) {
 }
 addTaskBtnRef.addEventListener("click", onClickCreateTask);
 init();
+function addNewTask(object) {
+  const markUp = createLiMarkup([object]);
+  addMarkup(markUp);
+}
