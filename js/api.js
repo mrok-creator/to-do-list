@@ -17,4 +17,4 @@ function getToLocalSTorage(key) {
   return null;
 }
 
-export { addToLocalStorage };
+export { addToLocalStorage, getToLocalSTorage };

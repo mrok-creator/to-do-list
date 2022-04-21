@@ -1,6 +1,6 @@
-import { addToLocalStorage } from "./api.js";
+import { addToLocalStorage, getToLocalSTorage } from "./api.js";
 import { KEY_LOCAL_STORAGE } from "./constante.js";
-import { headerRef, toDoInputRef, addTaskBtnRef } from "./refs.js";
+import { headerRef, toDoInputRef, addTaskBtnRef, taskListRef } from "./refs.js";
 
 function onClickCreateTask() {
   const task = toDoInputRef.value.trim();
@@ -19,4 +19,24 @@ function objDataCreate(text, statusbar = false) {
   };
 }
 
+function init() {
+  const data = getToLocalSTorage(KEY_LOCAL_STORAGE);
+  console.log(data);
+  if (!data) return;
+  const tasks = createLiMarkup(data);
+  console.log(tasks);
+  addMarkup(tasks);
+}
+function createLiMarkup(task) {
+  return task
+    .map(
+      ({ text, id, statusbar }) =>
+        `<li class="${statusbar ? "checked" : ""}" data-id="${id}">${text}</li>`
+    )
+    .join("");
+}
+function addMarkup(text) {
+  taskListRef.insertAdjacentHTML("beforeend", text);
+}
 addTaskBtnRef.addEventListener("click", onClickCreateTask);
+init();
