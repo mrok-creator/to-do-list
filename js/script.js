@@ -1,4 +1,8 @@
-import { addToLocalStorage, getToLocalSTorage } from "./api.js";
+import {
+  addToLocalStorageObject,
+  getToLocalSTorage,
+  addToLocalStorageArray,
+} from "./api.js";
 import { KEY_LOCAL_STORAGE } from "./constante.js";
 import { headerRef, toDoInputRef, addTaskBtnRef, taskListRef } from "./refs.js";
 
@@ -7,8 +11,10 @@ function onClickCreateTask() {
   if (!task) return;
 
   const dataTask = objDataCreate(task);
-  addToLocalStorage(KEY_LOCAL_STORAGE, dataTask);
+  addToLocalStorageObject(KEY_LOCAL_STORAGE, dataTask);
   toDoInputRef.value = "";
+
+  addNewTask(dataTask);
 }
 
 function objDataCreate(text, statusbar = false) {
@@ -21,22 +27,57 @@ function objDataCreate(text, statusbar = false) {
 
 function init() {
   const data = getToLocalSTorage(KEY_LOCAL_STORAGE);
-  console.log(data);
+
   if (!data) return;
   const tasks = createLiMarkup(data);
-  console.log(tasks);
   addMarkup(tasks);
 }
+
 function createLiMarkup(task) {
   return task
     .map(
       ({ text, id, statusbar }) =>
-        `<li class="${statusbar ? "checked" : ""}" data-id="${id}">${text}</li>`
+        `<li class="${statusbar ? "checked" : ""}" data-id="${id}">${text}
+        <button type="button">&#10006;</button>
+        </li>`
     )
     .join("");
 }
+
 function addMarkup(text) {
   taskListRef.insertAdjacentHTML("beforeend", text);
 }
+
+function addNewTask(taskObj) {
+  const markup = createLiMarkup([taskObj]);
+  addMarkup(markup);
+}
+
+function onTaskClick(e) {
+  if (e.target.nodeName !== "LI") {
+    return;
+  }
+  e.target.classList.toggle("checked");
+
+  const dataArray = getToLocalSTorage(KEY_LOCAL_STORAGE);
+  const taskId = e.target.dataset.id;
+
+  const updatedStatusBar = changeStatusBar(dataArray, taskId);
+  addToLocalStorageArray(KEY_LOCAL_STORAGE, updatedStatusBar);
+}
+
+function changeStatusBar(array, taskId) {
+  const arrayCopy = [...array];
+
+  arrayCopy.forEach((element) => {
+    if (element.id === Number(taskId)) {
+      element.statusbar = !element.statusbar;
+    }
+  });
+
+  return arrayCopy;
+}
+
 addTaskBtnRef.addEventListener("click", onClickCreateTask);
+taskListRef.addEventListener("click", onTaskClick);
 init();

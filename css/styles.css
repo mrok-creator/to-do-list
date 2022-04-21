@@ -14,6 +14,8 @@ ul li {
   position: relative;
   padding: 12px 8px 12px 40px;
   list-style-type: none;
+  display: flex;
+  justify-content: space-between;
   background: #eee;
   font-size: 18px;
   transition: 0.2s; /* make the list items unselectable */
