@@ -24,9 +24,9 @@ function objDataCreate(text, statusbar = false) {
   };
 }
 
-function init() {
-  const data = getToLocalSTorage(KEY_LOCAL_STORAGE);
-
+async function init() {
+  const data = await getToLocalSTorage(KEY_LOCAL_STORAGE);
+  console.log(await data);
   if (!data) return;
   const tasks = createLiMarkup(data);
   addMarkup(tasks);
@@ -47,13 +47,13 @@ function addMarkup(text) {
   taskListRef.insertAdjacentHTML("beforeend", text);
 }
 
-function onTaskClick(e) {
+async function onTaskClick(e) {
   if (e.target.nodeName !== "LI") {
     return;
   }
   e.target.classList.toggle("checked");
 
-  const dataArray = getToLocalSTorage(KEY_LOCAL_STORAGE);
+  const dataArray = await getToLocalSTorage(KEY_LOCAL_STORAGE);
   const taskId = e.target.dataset.id;
 
   const updatedStatusBar = changeStatusBar(dataArray, taskId);
