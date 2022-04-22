@@ -1,5 +1,5 @@
 function addToLocalStorageObject(key, obj) {
-  const data = getToLocalSTorage(key);
+  const data = getFromLocalSTorage(key);
   let array = [];
   if (data) {
     array = [...data, obj];
@@ -9,7 +9,7 @@ function addToLocalStorageObject(key, obj) {
   addToLocalStorageArray(key, array);
 }
 
-function getToLocalSTorage(key) {
+function getFromLocalSTorage(key) {
   const stringData = localStorage.getItem(key);
   if (stringData) {
     return JSON.parse(stringData);
@@ -21,4 +21,4 @@ function addToLocalStorageArray(key, array) {
   localStorage.setItem(key, JSON.stringify(array));
 }
 
-export { addToLocalStorageObject, getToLocalSTorage, addToLocalStorageArray };
+export { addToLocalStorageObject, getFromLocalSTorage, addToLocalStorageArray };
