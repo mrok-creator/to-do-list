@@ -50,6 +50,6 @@ function getFromLocalSTorage(key) {
 
 function addToLocalStorageArray(key, array) {
   localStorage.setItem(key, JSON.stringify(array));
-}
+  };
 
-export { addToLocalStorageObject, getFromLocalSTorage, addToLocalStorageArray };
+export { addToLocalStorageObject, getFromLocalSTorage, addToLocalStorageArray }
