@@ -1,10 +1,15 @@
 import {
   addToLocalStorageObject,
-  getToLocalSTorage,
+  getFromLocalSTorage,
   addToLocalStorageArray,
 } from "./api.js";
 import { KEY_LOCAL_STORAGE } from "./constante.js";
 import { headerRef, toDoInputRef, addTaskBtnRef, taskListRef } from "./refs.js";
+
+addTaskBtnRef.addEventListener("click", onClickCreateTask);
+taskListRef.addEventListener("click", onTaskClick);
+taskListRef.addEventListener("click", onDeleteBtnClick);
+init();
 
 function onClickCreateTask() {
   const task = toDoInputRef.value.trim();
@@ -25,8 +30,8 @@ function objDataCreate(text, statusbar = false) {
 }
 
 async function init() {
-  const data = await getToLocalSTorage(KEY_LOCAL_STORAGE);
-  console.log(await data);
+  const data = await getFromLocalSTorage(KEY_LOCAL_STORAGE);
+
   if (!data) return;
   const tasks = createLiMarkup(data);
   addMarkup(tasks);
@@ -53,7 +58,7 @@ async function onTaskClick(e) {
   }
   e.target.classList.toggle("checked");
 
-  const dataArray = await getToLocalSTorage(KEY_LOCAL_STORAGE);
+  const dataArray = getFromLocalSTorage(KEY_LOCAL_STORAGE);
   const taskId = e.target.dataset.id;
 
   const updatedStatusBar = changeStatusBar(dataArray, taskId);
@@ -77,6 +82,21 @@ function addNewTask(object) {
   addMarkup(markUp);
 }
 
-addTaskBtnRef.addEventListener("click", onClickCreateTask);
-taskListRef.addEventListener("click", onTaskClick);
-init();
+function onDeleteBtnClick(e) {
+  if (e.target.nodeName !== "BUTTON") {
+    return;
+  }
+  const doneTaskId = e.target.parentNode.dataset.id;
+
+  const filteredData = dataFilter(
+    getFromLocalSTorage(KEY_LOCAL_STORAGE),
+    doneTaskId
+  );
+  console.log(filteredData);
+  addToLocalStorageArray(KEY_LOCAL_STORAGE, filteredData);
+  e.target.parentNode.remove();
+}
+
+function dataFilter(array, dataId) {
+  return array.filter((element) => String(element.id) !== dataId);
+}

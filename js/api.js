@@ -25,17 +25,16 @@ function addToLocalStorageObject(key, obj) {
     push(ref(db, key), obj);
   } catch (error) {
     console.log(error);
-  }
 }
 
-// function getToLocalSTorage(key) {
+// function getFromLocalSTorage(key) {
 //   const stringData = localStorage.getItem(key);
 //   if (stringData) {
 //     return JSON.parse(stringData);
 //   }
 //   return null;
 // }
-function getToLocalSTorage(key) {
+function getFromLocalSTorage(key) {
   return get(ref(db, key))
     .then((snapshot) => {
       if (snapshot.exists()) {
@@ -53,4 +52,4 @@ function addToLocalStorageArray(key, array) {
   localStorage.setItem(key, JSON.stringify(array));
 }
 
-export { addToLocalStorageObject, getToLocalSTorage, addToLocalStorageArray };
+export { addToLocalStorageObject, getFromLocalSTorage, addToLocalStorageArray };
