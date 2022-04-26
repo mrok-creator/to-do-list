@@ -4,21 +4,12 @@ import {
   set,
   ref,
   get,
+  remove,
 } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.11/firebase-database.min.js";
+
 import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 
-//  const newPostKey = push(child(ref(db), 'posts')).key;
-// function addToLocalStorageObject(key, obj) {
-//   const data = getToLocalSTorage(key);
-//   let array = [];
-//   if (data) {
-//     array = [...data, obj];
-//   } else {
-//     array.push(obj);
-//   }
-//   addToLocalStorageArray(key, array);
-// }
 const db = getDatabase();
 function addToFirebaseObj(key, obj) {
   try {
@@ -26,13 +17,6 @@ function addToFirebaseObj(key, obj) {
   } catch (error) {
     console.log(error);
   }
-
-  // function getFromLocalSTorage(key) {
-  //   const stringData = localStorage.getItem(key);
-  //   if (stringData) {
-  //     return JSON.parse(stringData);
-  //   }
-  //   return null;
 }
 function getFromFirebase(key) {
   return get(ref(db, key))
@@ -48,8 +32,12 @@ function getFromFirebase(key) {
     });
 }
 
-// function addToLocalStorageArray(key, array) {
-//   localStorage.setItem(key, JSON.stringify(array));
-// }
+function removeElementFromFirebase(key, id) {
+  try {
+    remove(ref(db, key + `/` + id));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-export { addToFirebaseObj, getFromFirebase };
+export { addToFirebaseObj, getFromFirebase, removeElementFromFirebase };

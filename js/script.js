@@ -1,11 +1,12 @@
-import { addToFirebaseObj, getFromFirebase } from "./api.js";
+import {
+  addToFirebaseObj,
+  getFromFirebase,
+  removeElementFromFirebase,
+} from "./api.js";
 import { KEY_LOCAL_STORAGE } from "./constante.js";
 import { headerRef, toDoInputRef, addTaskBtnRef, taskListRef } from "./refs.js";
-
-addTaskBtnRef.addEventListener("click", onClickCreateTask);
-taskListRef.addEventListener("click", onTaskClick);
-taskListRef.addEventListener("click", onDeleteBtnClick);
-init();
+import { objDataCreate } from "./model.js";
+import { createLiMarkup } from "./views.js";
 
 function onClickCreateTask() {
   const task = toDoInputRef.value.trim();
@@ -17,31 +18,11 @@ function onClickCreateTask() {
   addNewTask(dataTask);
 }
 
-function objDataCreate(text, statusbar = false) {
-  return {
-    text,
-    id: Date.now(),
-    statusbar,
-  };
-}
-
 async function init() {
   const data = await getFromFirebase(KEY_LOCAL_STORAGE);
-  console.log(data);
   if (!data) return;
   const tasks = createLiMarkup(data);
   addMarkup(tasks);
-}
-
-function createLiMarkup(task) {
-  return task
-    .map(
-      ({ text, id, statusbar }) =>
-        `<li class="${statusbar ? "checked" : ""}" data-id="${id}">${text}
-        <button type="button">&#10006;</button>
-        </li>`
-    )
-    .join("");
 }
 
 function addMarkup(text) {
@@ -55,12 +36,9 @@ async function onTaskClick(e) {
   e.target.classList.toggle("checked");
 
   const dataArray = await getFromFirebase(KEY_LOCAL_STORAGE);
-  console.log(dataArray);
   const taskId = e.target.dataset.id;
-  console.log(taskId);
   const saveObj = changeStatusBar(dataArray, taskId);
   addToFirebaseObj(KEY_LOCAL_STORAGE, saveObj);
-  console.log(saveObj);
 }
 
 function changeStatusBar(array, taskId) {
@@ -87,15 +65,12 @@ function onDeleteBtnClick(e) {
   }
   const doneTaskId = e.target.parentNode.dataset.id;
 
-  const filteredData = dataFilter(
-    getFromFirebase(KEY_LOCAL_STORAGE),
-    doneTaskId
-  );
-  console.log(filteredData);
-  addToLocalStorageArray(KEY_LOCAL_STORAGE, filteredData);
+  removeElementFromFirebase(KEY_LOCAL_STORAGE, doneTaskId);
   e.target.parentNode.remove();
 }
 
-function dataFilter(array, dataId) {
-  return array.filter((element) => String(element.id) !== dataId);
-}
+init();
+
+addTaskBtnRef.addEventListener("click", onClickCreateTask);
+taskListRef.addEventListener("click", onTaskClick);
+taskListRef.addEventListener("click", onDeleteBtnClick);
