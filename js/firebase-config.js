@@ -5,12 +5,12 @@
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyCo6mglrv9ouWRCFhHp6gNIrOA7zKRh9FQ",
+  apiKey: "AIzaSyC4RIS0Xd8gX3JVZ666CJTjwpsSaEYSbQc",
+  authDomain: "test-5cd95.firebaseapp.com",
   databaseURL:
-    "https://new-try-2b2ec-default-rtdb.europe-west1.firebasedatabase.app",
-  authDomain: "new-try-2b2ec.firebaseapp.com",
-  projectId: "new-try-2b2ec",
-  storageBucket: "new-try-2b2ec.appspot.com",
-  messagingSenderId: "1010211583907",
-  appId: "1:1010211583907:web:4a01bf44a9c97a7f6e4c16",
+    "https://test-5cd95-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "test-5cd95",
+  storageBucket: "test-5cd95.appspot.com",
+  messagingSenderId: "1044266885478",
+  appId: "1:1044266885478:web:1df69c97269f52455068a7",
 };

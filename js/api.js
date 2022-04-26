@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
 import {
   getDatabase,
-  push,
+  set,
   ref,
   get,
 } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.11/firebase-database.min.js";
@@ -20,21 +20,21 @@ const app = initializeApp(firebaseConfig);
 //   addToLocalStorageArray(key, array);
 // }
 const db = getDatabase();
-function addToLocalStorageObject(key, obj) {
+function addToFirebaseObj(key, obj) {
   try {
-    push(ref(db, key), obj);
+    set(ref(db, key + "/" + obj.id), obj);
   } catch (error) {
     console.log(error);
-}
+  }
 
-// function getFromLocalSTorage(key) {
-//   const stringData = localStorage.getItem(key);
-//   if (stringData) {
-//     return JSON.parse(stringData);
-//   }
-//   return null;
-// }
-function getFromLocalSTorage(key) {
+  // function getFromLocalSTorage(key) {
+  //   const stringData = localStorage.getItem(key);
+  //   if (stringData) {
+  //     return JSON.parse(stringData);
+  //   }
+  //   return null;
+}
+function getFromFirebase(key) {
   return get(ref(db, key))
     .then((snapshot) => {
       if (snapshot.exists()) {
@@ -48,8 +48,8 @@ function getFromLocalSTorage(key) {
     });
 }
 
-function addToLocalStorageArray(key, array) {
-  localStorage.setItem(key, JSON.stringify(array));
-  };
+// function addToLocalStorageArray(key, array) {
+//   localStorage.setItem(key, JSON.stringify(array));
+// }
 
-export { addToLocalStorageObject, getFromLocalSTorage, addToLocalStorageArray }
+export { addToFirebaseObj, getFromFirebase };

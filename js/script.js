@@ -1,8 +1,4 @@
-import {
-  addToLocalStorageObject,
-  getFromLocalSTorage,
-  addToLocalStorageArray,
-} from "./api.js";
+import { addToFirebaseObj, getFromFirebase } from "./api.js";
 import { KEY_LOCAL_STORAGE } from "./constante.js";
 import { headerRef, toDoInputRef, addTaskBtnRef, taskListRef } from "./refs.js";
 
@@ -16,7 +12,7 @@ function onClickCreateTask() {
   if (!task) return;
 
   const dataTask = objDataCreate(task);
-  addToLocalStorageObject(KEY_LOCAL_STORAGE, dataTask);
+  addToFirebaseObj(KEY_LOCAL_STORAGE, dataTask);
   toDoInputRef.value = "";
   addNewTask(dataTask);
 }
@@ -30,8 +26,8 @@ function objDataCreate(text, statusbar = false) {
 }
 
 async function init() {
-  const data = await getFromLocalSTorage(KEY_LOCAL_STORAGE);
-
+  const data = await getFromFirebase(KEY_LOCAL_STORAGE);
+  console.log(data);
   if (!data) return;
   const tasks = createLiMarkup(data);
   addMarkup(tasks);
@@ -58,23 +54,26 @@ async function onTaskClick(e) {
   }
   e.target.classList.toggle("checked");
 
-  const dataArray = getFromLocalSTorage(KEY_LOCAL_STORAGE);
+  const dataArray = await getFromFirebase(KEY_LOCAL_STORAGE);
+  console.log(dataArray);
   const taskId = e.target.dataset.id;
-
-  const updatedStatusBar = changeStatusBar(dataArray, taskId);
-  addToLocalStorageArray(KEY_LOCAL_STORAGE, updatedStatusBar);
+  console.log(taskId);
+  const saveObj = changeStatusBar(dataArray, taskId);
+  addToFirebaseObj(KEY_LOCAL_STORAGE, saveObj);
+  console.log(saveObj);
 }
 
 function changeStatusBar(array, taskId) {
   const arrayCopy = [...array];
-
+  let someObj = {};
   arrayCopy.forEach((element) => {
     if (element.id === Number(taskId)) {
       element.statusbar = !element.statusbar;
+      someObj = element;
     }
   });
 
-  return arrayCopy;
+  return someObj;
 }
 
 function addNewTask(object) {
@@ -89,7 +88,7 @@ function onDeleteBtnClick(e) {
   const doneTaskId = e.target.parentNode.dataset.id;
 
   const filteredData = dataFilter(
-    getFromLocalSTorage(KEY_LOCAL_STORAGE),
+    getFromFirebase(KEY_LOCAL_STORAGE),
     doneTaskId
   );
   console.log(filteredData);
